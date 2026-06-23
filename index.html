@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPS Dashboard · Data4Deals</title>
+<style>
+:root {
+  --zarco: #3DB58C; --zarco-dark: #2A9070; --zarco-light: #E3F5EE; --zarco-xlight: #F2FCF7;
+  --finance: #185FA5; --finance-bg: #E6F1FB; --finance-t: #0C447C;
+  --campaigns: #3B6D11; --campaigns-bg: #EAF3DE; --campaigns-t: #27500A;
+  --ai: #534AB7; --ai-bg: #EEEDFE; --ai-t: #3C3489;
+  --control: #993C1D; --control-bg: #FAECE7; --control-t: #712B13;
+  --account: #BA7517; --account-bg: #FAEEDA; --account-t: #633806;
+  --tech: #0F6E56; --tech-bg: #E1F5EE; --tech-t: #085041;
+  --text: #1A202C; --text-2: #4A5568; --text-3: #718096; --text-4: #A0AEC0;
+  --bg: #F7FAFC; --white: #fff; --border: #E2E8F0; --border-soft: #EDF2F7;
+  --danger: #E53E3E; --danger-bg: #FFF5F5; --danger-border: #FED7D7;
+  --warn-bg: #FFFBEB; --warn-t: #92400E;
+  --info-bg: #EBF8FF; --info-t: #2C5282;
+  --hold-bg: #F7FAFC; --hold-t: #718096;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; }
+
+/* ── HEADER ── */
+header { background: var(--white); border-bottom: 1px solid var(--border); padding: 13px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo-mark { width: 34px; height: 34px; background: var(--zarco); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-name { font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: -.01em; }
+.logo-beta { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; background: var(--zarco-light); color: var(--zarco-dark); padding: 2px 7px; border-radius: 20px; margin-left: 5px; vertical-align: 2px; }
+.hdr-right { display: flex; align-items: center; gap: 12px; }
+.admin-pill { background: #FC8181; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .04em; padding: 3px 10px; border-radius: 5px; }
+.hdr-team { font-size: 13px; color: var(--text-3); }
+
+/* ── HERO ── */
+.hero { background: linear-gradient(155deg, var(--zarco-xlight) 0%, var(--zarco-light) 80%); border-bottom: 1px solid var(--border); padding: 36px 28px 30px; text-align: center; }
+.hero h1 { font-size: 30px; font-weight: 800; color: var(--text); letter-spacing: -.03em; margin-bottom: 6px; }
+.hero h1 em { font-style: normal; color: var(--zarco-dark); }
+.hero-sub { font-size: 14px; color: var(--text-2); margin-bottom: 16px; }
+.pills { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.pill { display: inline-flex; align-items: center; gap: 5px; background: var(--white); border: 1px solid var(--border); color: var(--text-2); font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
+
+/* ── PAGE TABS ── */
+.page-tabs { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; gap: 0; }
+.ptab { padding: 13px 22px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text-3); border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: inherit; transition: color .12s; }
+.ptab:hover { color: var(--text); }
+.ptab.active { color: var(--zarco-dark); border-bottom-color: var(--zarco-dark); }
+.ptab svg { margin-right: 6px; vertical-align: -2px; }
+
+/* ── MAIN ── */
+main { max-width: 1060px; margin: 0 auto; padding: 32px 20px 64px; }
+
+/* ── MONTH NAV ── */
+.month-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.month-label { font-size: 22px; font-weight: 700; color: var(--text); }
+.month-label em { font-style: normal; color: var(--zarco-dark); }
+.nav-btns { display: flex; gap: 8px; }
+.nav-btn { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 7px 18px; cursor: pointer; font-size: 13px; color: var(--text-2); font-family: inherit; transition: border-color .12s, color .12s; }
+.nav-btn:hover:not(:disabled) { border-color: var(--zarco); color: var(--zarco-dark); }
+.nav-btn:disabled { opacity: .3; cursor: not-allowed; }
+
+/* ── CALENDAR GRID ── */
+.calendar { background: var(--white); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; margin-bottom: 32px; }
+.cal-dow-row { display: grid; grid-template-columns: repeat(7, 1fr); background: var(--bg); border-bottom: 1px solid var(--border); }
+.cal-dow { padding: 10px 12px; text-align: center; font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .06em; }
+.cal-dow.wknd { color: var(--text-4); }
+.cal-body { display: grid; grid-template-columns: repeat(7, 1fr); }
+.cal-cell { min-height: 108px; padding: 9px 9px 7px; border-right: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); }
+.cal-cell:nth-child(7n) { border-right: none; }
+.cal-cell.empty { background: var(--bg); }
+.cal-cell.today-cell { background: var(--zarco-xlight); }
+.cal-cell.muted { opacity: .5; }
+.day-n { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; font-size: 13px; font-weight: 500; color: var(--text-2); margin-bottom: 4px; }
+.day-n.wknd { color: var(--text-4); }
+.today-cell .day-n { background: var(--zarco); color: #fff; font-weight: 700; }
+.chip { border-radius: 6px; padding: 5px 7px; margin-top: 3px; overflow: hidden; }
+.chip-name { font-size: 11px; font-weight: 600; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chip-topic { font-size: 10px; line-height: 1.3; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .82; }
+
+/* ── SESSION CARDS ── */
+.cards-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+.cards-empty { font-size: 14px; color: var(--text-4); padding: 8px 0; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(264px, 1fr)); gap: 12px; }
+.scard { background: var(--white); border: 1px solid var(--border); border-radius: 13px; padding: 16px; transition: transform .12s, box-shadow .12s; }
+.scard:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.07); }
+.scard-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.scard-date { font-size: 12px; color: var(--text-3); line-height: 1.5; }
+.sno { font-size: 10px; padding: 2px 9px; border-radius: 20px; white-space: nowrap; margin-left: 8px; flex-shrink: 0; margin-top: 1px; }
+.sno-default { background: var(--bg); color: var(--text-3); }
+.sno-today { background: var(--zarco-light); color: var(--zarco-dark); font-weight: 700; }
+.scard-presenter { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.savatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.s-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.s-team { font-size: 11px; font-weight: 500; margin-top: 1px; }
+.s-project { font-size: 13px; color: var(--text-2); margin-bottom: 5px; }
+.s-key { font-size: 11px; font-family: 'Courier New', monospace; color: var(--text-4); }
+
+/* ── STRIP ── */
+.strip-title { font-size: 16px; font-weight: 700; color: var(--text); margin: 40px 0 14px; }
+.strip { display: flex; flex-direction: column; gap: 6px; }
+.strip-row { display: flex; align-items: center; gap: 14px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 11px 16px; transition: border-color .12s; }
+.strip-row:hover { border-color: var(--zarco); }
+.strip-date { width: 110px; flex-shrink: 0; font-size: 12px; color: var(--text-3); }
+.strip-num { width: 64px; flex-shrink: 0; font-size: 11px; padding: 2px 8px; border-radius: 20px; text-align: center; }
+.strip-pres { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.strip-av { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+.strip-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; }
+.strip-team-tag { font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; white-space: nowrap; }
+.strip-proj { font-size: 12px; color: var(--text-2); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.strip-key { font-size: 10px; font-family: 'Courier New', monospace; color: var(--text-4); flex-shrink: 0; }
+
+/* ── PRIORITIES SECTION ── */
+.prio-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.prio-title { font-size: 20px; font-weight: 700; color: var(--text); }
+.sprint-badge { display: flex; align-items: center; gap: 6px; background: var(--danger-bg); border: 1px solid var(--danger-border); color: var(--danger); font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px; }
+.alert-bar { display: flex; align-items: center; gap: 10px; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: 10px; padding: 11px 16px; margin-bottom: 22px; }
+.alert-bar-text { font-size: 13px; color: var(--danger); }
+.alert-bar-text strong { font-weight: 700; }
+.tsec { margin-bottom: 18px; }
+.thead { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; padding: 0 2px; }
+.tdot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.tname { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-3); }
+.town { font-size: 12px; color: var(--text-4); margin-left: 2px; }
+.tcount { font-size: 11px; color: var(--text-4); margin-left: auto; }
+.trows { background: var(--white); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+
+
+.trow-accent { border-left: 3px solid var(--tc); }
+.tkey { font-size: 11px; font-family: 'Courier New', monospace; color: var(--text-4); flex-shrink: 0; width: 58px; }
+.ttitle { font-size: 13px; color: var(--text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.spill { font-size: 10px; padding: 2px 9px; border-radius: 20px; flex-shrink: 0; white-space: nowrap; font-weight: 500; }
+.p-prog { background: var(--warn-bg); color: var(--warn-t); }
+.p-todo { background: var(--info-bg); color: var(--info-t); }
+.p-hold { background: var(--hold-bg); color: var(--hold-t); }
+.p-over { background: var(--danger-bg); color: var(--danger); }
+.trow { cursor: pointer; transition: background .1s; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid var(--border-soft); }
+.trow:last-child { border-bottom: none; }
+.trow:hover { background: #F7FAFC; }
+.trow:hover .tkey { color: var(--zarco-dark); }
+.tdue { font-size: 11px; flex-shrink: 0; }
+.tdue-u { color: var(--danger); font-weight: 600; }
+.tdue-n { color: var(--text-4); }
+.tass { font-size: 11px; color: var(--text-3); flex-shrink: 0; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── FOOTER ── */
+footer { text-align: center; padding: 28px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-3); }
+.foot-logo { display: flex; align-items: center; justify-content: center; gap: 7px; margin-bottom: 5px; }
+.foot-z { width: 20px; height: 20px; background: var(--zarco); border-radius: 5px; display: flex; align-items: center; justify-content: center; }
+
+@media(max-width:680px) {
+  .hero h1 { font-size: 24px; }
+  .strip-row { flex-wrap: wrap; gap: 8px; }
+  .strip-date, .strip-num { width: auto; }
+  .prio-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .tass { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-mark">
+      <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+        <path d="M4 5.5h14L7 11.5l11 5.5H4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="18" cy="5.5" r="1.8" fill="rgba(255,255,255,.7)"/>
+      </svg>
+    </div>
+    <span class="logo-name">Zarco<span class="logo-beta">BETA</span></span>
+  </a>
+  <div class="hdr-right">
+    <span class="hdr-team">OPS · Data4Deals</span>
+    <span class="admin-pill">ADMIN</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>OPS <em>Dashboard</em></h1>
+  <p class="hero-sub">Sprint de Junho 2026 · Reunião semanal · Terças-feiras 2× por mês</p>
+  <div class="pills">
+    <span class="pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--zarco-dark)" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Sprint → 30 Jun 2026
+    </span>
+    <span class="pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--zarco-dark)" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Calendário Jun → Set 2026
+    </span>
+    <span class="pill">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--zarco-dark)" stroke-width="2.2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      5 equipas · 19 tarefas no sprint
+    </span>
+  </div>
+</div>
+
+<!-- PAGE TABS -->
+<div class="page-tabs">
+  <button class="ptab active" id="ptab-prio" onclick="switchView('prio')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+    </svg>
+    Prioridades do mês
+  </button>
+  <button class="ptab" id="ptab-cal" onclick="switchView('cal')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+    </svg>
+    Calendário de apresentações
+  </button>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- ═══ VIEW: PRIORITIES ═══ -->
+  <div id="view-prio">
+
+    <div class="prio-header">
+      <div>
+        <div class="prio-title">Sprint de Junho 2026</div>
+        <div style="font-size:13px;color:var(--text-3);margin-top:3px">23 Jun 2026 · Tarefas do sprint activo por equipa</div>
+      </div>
+      <div class="sprint-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        7 dias restantes
+      </div>
+    </div>
+
+    <!-- FINANCE -->
+    <div class="tsec">
+      <div class="thead">
+        <div class="tdot" style="background:#185FA5"></div>
+        <span class="tname">Finance</span>
+        <span class="town">Joana Palma</span>
+        <span class="tcount">6 tarefas</span>
+      </div>
+      <div class="trows">
+        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-106">
+          <span class="tkey">OPM-106</span>
+          <span class="ttitle">Envio de Convites</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue tdue-u">⚑ 29 Jun</span>
+          <span class="tass">Joana Palma</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-66">
+          <span class="tkey">OPM-66</span>
+          <span class="ttitle">Reporting de Cobranças</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Vasco Tamen</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-225">
+          <span class="tkey">OPM-225</span>
+          <span class="ttitle">Melhoria de sistema automático</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Vasco Tamen</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-101">
+          <span class="tkey">OPM-101</span>
+          <span class="ttitle">Resposta a Cobranças Automática</span>
+          <span class="spill p-todo">A fazer</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Vasco Tamen</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-67">
+          <span class="tkey">OPM-67</span>
+          <span class="ttitle">Regularização do Envio de Notas de Cobrança</span>
+          <span class="spill p-todo">A fazer</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Vasco Tamen</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-62">
+          <span class="tkey">OPM-62</span>
+          <span class="ttitle">Mapeamento de IDs Fatura Históricos</span>
+          <span class="spill p-over">Atrasado</span>
+          <span class="tdue tdue-u">12 Jun</span>
+          <span class="tass">Joana Palma</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- CAMPAIGNS -->
+    <div class="tsec">
+      <div class="thead">
+        <div class="tdot" style="background:#3B6D11"></div>
+        <span class="tname">Campaigns</span>
+        <span class="town">Inês Ferreira</span>
+        <span class="tcount">3 tarefas</span>
+      </div>
+      <div class="trows">
+        <a class="trow trow-accent" style="--tc:#3B6D11" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-35">
+          <span class="tkey">OPM-35</span>
+          <span class="ttitle">Automatização dos Textos de Campanhas</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Inês Ferreira</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#3B6D11" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-217">
+          <span class="tkey">OPM-217</span>
+          <span class="ttitle">Textos Automáticos na criação de campanhas</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Duarte Ramires</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#3B6D11" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-117">
+          <span class="tkey">OPM-117</span>
+          <span class="ttitle">Geração de Mocks Campanhas</span>
+          <span class="spill p-todo">A fazer</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Dinis Rodrigues</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- AI AGENTS -->
+    <div class="tsec">
+      <div class="thead">
+        <div class="tdot" style="background:#534AB7"></div>
+        <span class="tname">AI Agents</span>
+        <span class="town">António Monteiro</span>
+        <span class="tcount">3 tarefas</span>
+      </div>
+      <div class="trows">
+        <a class="trow trow-accent" style="--tc:#534AB7" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-99">
+          <span class="tkey">OPM-99</span>
+          <span class="ttitle">Resposta Automática a Reclamações</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">António Monteiro</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#534AB7" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-229">
+          <span class="tkey">OPM-229</span>
+          <span class="ttitle">Assistente de Account</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Vasco Tamen</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#534AB7" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-100">
+          <span class="tkey">OPM-100</span>
+          <span class="ttitle">Automação de Report: Not Invoice &amp; Cancelled</span>
+          <span class="spill p-todo">A fazer</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">António Monteiro</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- CONTROL PROCESSES -->
+    <div class="tsec">
+      <div class="thead">
+        <div class="tdot" style="background:#993C1D"></div>
+        <span class="tname">Control Processes</span>
+        <span class="town">Vasco Tamen</span>
+        <span class="tcount">2 tarefas</span>
+      </div>
+      <div class="trows">
+        <a class="trow trow-accent" style="--tc:#993C1D" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-82">
+          <span class="tkey">OPM-82</span>
+          <span class="ttitle">Unificação dos Emails de Reclamações em JIRA</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">António Monteiro</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#993C1D" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-254">
+          <span class="tkey">OPM-254</span>
+          <span class="ttitle">Sugestão de valores — Sistema de Atribuição</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Vasco Tamen</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ACCOUNT COMERCIAL -->
+    <div class="tsec">
+      <div class="thead">
+        <div class="tdot" style="background:#BA7517"></div>
+        <span class="tname">Account Comercial</span>
+        <span class="town">Sofia Cabanas</span>
+        <span class="tcount">3 tarefas</span>
+      </div>
+      <div class="trows">
+        <a class="trow trow-accent" style="--tc:#BA7517" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-250">
+          <span class="tkey">OPM-250</span>
+          <span class="ttitle">Avaliação da melhor ferramenta (Revamp Pipedrive)</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Sofia Cabanas</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#BA7517" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-24">
+          <span class="tkey">OPM-24</span>
+          <span class="ttitle">Construção de Reports em Excel Automáticos</span>
+          <span class="spill p-hold">On hold</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Vasco Correia</span>
+        </a>
+        <a class="trow trow-accent" style="--tc:#BA7517" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-134">
+          <span class="tkey">OPM-134</span>
+          <span class="ttitle">Mock Push Notifications</span>
+          <span class="spill p-hold">On hold</span>
+          <span class="tdue tdue-n">—</span>
+          <span class="tass">Vasco Tamen</span>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /view-prio -->
+
+  <!-- ═══ VIEW: CALENDAR ═══ -->
+  <div id="view-cal" style="display:none">
+
+    <div class="month-nav">
+      <div class="month-label" id="monthLabel"></div>
+      <div class="nav-btns">
+        <button class="nav-btn" id="prevBtn" onclick="prev()">← Anterior</button>
+        <button class="nav-btn" id="nextBtn" onclick="next()">Seguinte →</button>
+      </div>
+    </div>
+
+    <div class="calendar">
+      <div class="cal-dow-row">
+        <div class="cal-dow">Seg</div><div class="cal-dow">Ter</div>
+        <div class="cal-dow">Qua</div><div class="cal-dow">Qui</div>
+        <div class="cal-dow">Sex</div>
+        <div class="cal-dow wknd">Sáb</div><div class="cal-dow wknd">Dom</div>
+      </div>
+      <div class="cal-body" id="calBody"></div>
+    </div>
+
+    <div class="cards-title" id="cardsTitle"></div>
+    <div class="cards-grid" id="cardsGrid"></div>
+
+    <div class="strip-title">Todas as sessões</div>
+    <div class="strip" id="stripAll"></div>
+
+  </div><!-- /view-cal -->
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-logo">
+    <div class="foot-z">
+      <svg width="12" height="12" viewBox="0 0 22 22" fill="none">
+        <path d="M4 5.5h14L7 11.5l11 5.5H4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <strong style="color:var(--zarco-dark)">Zarco</strong>
+  </div>
+  Data4Deals &middot; OPS Team &middot; Sprint &amp; Calendário de Apresentações 2026
+</footer>
+
+<script>
+/* ── DATA ── */
+const SESSIONS = [
+  { date:'2026-06-23', n:1, presenter:'Joana Palma',      init:'JP', team:'Finance',          tk:'finance',   key:'OPM-106', project:'Envio de Convites',                  isToday:true },
+  { date:'2026-07-07', n:2, presenter:'António Monteiro', init:'AM', team:'AI Agents',         tk:'ai',        key:'OPM-17',  project:'Complains Analysis + AI Agents'                    },
+  { date:'2026-07-21', n:3, presenter:'Inês Ferreira',    init:'IF', team:'Campaigns',         tk:'campaigns', key:'OPM-7',   project:'Lançamento de Campanhas'                           },
+  { date:'2026-08-04', n:4, presenter:'Vasco Tamen',      init:'VT', team:'Control Processes', tk:'control',   key:'OPM-251', project:'Sistema de Atribuição'                             },
+  { date:'2026-08-18', n:5, presenter:'Sofia Cabanas',    init:'SC', team:'Account Comercial', tk:'account',   key:'OPM-235', project:'Revamp Pipedrive'                                  },
+  { date:'2026-09-01', n:6, presenter:'Duarte Ramires',   init:'DR', team:'Technology',        tk:'tech',      key:'OPM-20',  project:'Portal de Merchants'                               },
+  { date:'2026-09-15', n:7, presenter:'Vasco Tamen',      init:'VT', team:'Finance',           tk:'finance',   key:'OPM-13',  project:'Cobranças — Reporting & Automação'                 }
+];
+const C = {
+  finance:   { bg:'#E6F1FB', t:'#0C447C', b:'#185FA5' },
+  campaigns: { bg:'#EAF3DE', t:'#27500A', b:'#3B6D11' },
+  ai:        { bg:'#EEEDFE', t:'#3C3489', b:'#534AB7' },
+  control:   { bg:'#FAECE7', t:'#712B13', b:'#993C1D' },
+  account:   { bg:'#FAEEDA', t:'#633806', b:'#BA7517' },
+  tech:      { bg:'#E1F5EE', t:'#085041', b:'#0F6E56' }
+};
+const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DOW_PT = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+const TODAY = new Date(2026,5,23);
+let curYear=2026, curMonth=5;
+const MIN_M=5, MAX_M=8;
+
+/* ── VIEW SWITCH ── */
+function switchView(v) {
+  document.getElementById('view-prio').style.display = v==='prio' ? 'block' : 'none';
+  document.getElementById('view-cal').style.display  = v==='cal'  ? 'block' : 'none';
+  document.getElementById('ptab-prio').classList.toggle('active', v==='prio');
+  document.getElementById('ptab-cal').classList.toggle('active',  v==='cal');
+}
+
+/* ── CALENDAR RENDER ── */
+function render() {
+  const y=curYear, m=curMonth;
+  document.getElementById('monthLabel').innerHTML = `${MONTHS_PT[m]} <em>${y}</em>`;
+  document.getElementById('cardsTitle').textContent = `Apresentações em ${MONTHS_PT[m]}`;
+  const smap={};
+  SESSIONS.forEach(s => {
+    const d=new Date(s.date+'T12:00:00');
+    if(d.getFullYear()===y && d.getMonth()===m) smap[d.getDate()]=s;
+  });
+  const fd=new Date(y,m,1).getDay();
+  const startPad=fd===0?6:fd-1;
+  const days=new Date(y,m+1,0).getDate();
+  let cal='';
+  for(let i=0;i<startPad;i++) cal+='<div class="cal-cell empty"></div>';
+  for(let d=1;d<=days;d++){
+    const dt=new Date(y,m,d);
+    const isWknd=dt.getDay()===0||dt.getDay()===6;
+    const isToday=y===TODAY.getFullYear()&&m===TODAY.getMonth()&&d===TODAY.getDate();
+    const isPast=dt<TODAY&&!isToday;
+    const sess=smap[d];
+    let cls='cal-cell'+(isToday?' today-cell':'')+(isPast?' muted':'');
+    let chip='';
+    if(sess){
+      const c=C[sess.tk];
+      chip=`<div class="chip" style="background:${c.bg}"><div class="chip-name" style="color:${c.t}">${sess.presenter}</div><div class="chip-topic" style="color:${c.t}">${sess.project}</div></div>`;
+    }
+    cal+=`<div class="${cls}"><div class="day-n${isWknd?' wknd':''}">${d}</div>${chip}</div>`;
+  }
+  document.getElementById('calBody').innerHTML=cal;
+  const mS=SESSIONS.filter(s=>{const d=new Date(s.date+'T12:00:00');return d.getFullYear()===y&&d.getMonth()===m;});
+  document.getElementById('cardsGrid').innerHTML=!mS.length
+    ?'<p class="cards-empty">Sem apresentações agendadas neste mês.</p>'
+    :mS.map(s=>{
+      const c=C[s.tk];
+      const dt=new Date(s.date+'T12:00:00');
+      const dateStr=`${DOW_PT[dt.getDay()]}, ${dt.getDate()} de ${MONTHS_PT[dt.getMonth()]} de ${dt.getFullYear()}`;
+      return `<div class="scard" style="border-left:4px solid ${c.b}">
+        <div class="scard-head"><div class="scard-date">${dateStr}</div><span class="sno ${s.isToday?'sno-today':'sno-default'}">${s.isToday?'● Hoje':`Sessão ${s.n}`}</span></div>
+        <div class="scard-presenter"><div class="savatar" style="background:${c.bg};color:${c.t}">${s.init}</div>
+          <div><div class="s-name">${s.presenter}</div><div class="s-team" style="color:${c.b}">${s.team}</div></div></div>
+        <div class="s-project">${s.project}</div><div class="s-key">${s.key}</div></div>`;
+    }).join('');
+  document.getElementById('prevBtn').disabled=m<=MIN_M;
+  document.getElementById('nextBtn').disabled=m>=MAX_M;
+}
+function prev(){if(curMonth>MIN_M){curMonth--;render();}}
+function next(){if(curMonth<MAX_M){curMonth++;render();}}
+
+/* ── STRIP ── */
+document.getElementById('stripAll').innerHTML=SESSIONS.map(s=>{
+  const c=C[s.tk];
+  const dt=new Date(s.date+'T12:00:00');
+  const dateStr=`${dt.getDate()} ${MONTHS_PT[dt.getMonth()].slice(0,3)} ${dt.getFullYear()}`;
+  return `<div class="strip-row" style="border-left:3px solid ${c.b}">
+    <div class="strip-date">${dateStr}</div>
+    <span class="strip-num" style="background:${c.bg};color:${c.t}">Sessão ${s.n}</span>
+    <div class="strip-pres">
+      <div class="strip-av" style="background:${c.bg};color:${c.t}">${s.init}</div>
+      <span class="strip-name">${s.presenter}</span>
+      <span class="strip-team-tag" style="background:${c.bg};color:${c.t}">${s.team}</span>
+    </div>
+    <div class="strip-proj">${s.project}</div>
+    <div class="strip-key">${s.key}</div>
+  </div>`;
+}).join('');
+
+render();
+</script>
+</body>
+</html>
