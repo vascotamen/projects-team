@@ -42,7 +42,7 @@ header { background: var(--white); border-bottom: 1px solid var(--border); paddi
 .pill { display: inline-flex; align-items: center; gap: 5px; background: var(--white); border: 1px solid var(--border); color: var(--text-2); font-size: 12px; padding: 5px 14px; border-radius: 20px; white-space: nowrap; }
 
 /* ── PAGE TABS ── */
-.page-tabs { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; gap: 0; }
+.page-tabs { background: var(--white); border-bottom: 1px solid var(--border); padding: 0; display: flex; justify-content: center; gap: 0; }
 .ptab { padding: 13px 22px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--text-3); border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: inherit; transition: color .12s; }
 .ptab:hover { color: var(--text); }
 .ptab.active { color: var(--zarco-dark); border-bottom-color: var(--zarco-dark); }
@@ -128,11 +128,12 @@ main { max-width: 1060px; margin: 0 auto; padding: 32px 20px 64px; }
 
 .trow-accent { border-left: 3px solid var(--tc); }
 .tkey { font-size: 11px; font-family: 'Courier New', monospace; color: var(--text-4); flex-shrink: 0; width: 58px; }
-.ttitle { font-size: 13px; color: var(--text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .spill { font-size: 10px; padding: 2px 9px; border-radius: 20px; flex-shrink: 0; white-space: nowrap; font-weight: 500; }
 .p-prog { background: var(--warn-bg); color: var(--warn-t); }
 .p-todo { background: var(--info-bg); color: var(--info-t); }
 .p-hold { background: var(--hold-bg); color: var(--hold-t); }
+
 .p-over { background: var(--danger-bg); color: var(--danger); }
 .trow { cursor: pointer; transition: background .1s; text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid var(--border-soft); }
 .trow:last-child { border-bottom: none; }
@@ -142,6 +143,18 @@ main { max-width: 1060px; margin: 0 auto; padding: 32px 20px 64px; }
 .tdue-u { color: var(--danger); font-weight: 600; }
 .tdue-n { color: var(--text-4); }
 .tass { font-size: 11px; color: var(--text-3); flex-shrink: 0; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tepic-group { margin-bottom: 10px; }
+.tepic-header { display: flex; align-items: center; gap: 6px; padding: 6px 14px; background: var(--border-soft); border: 0.5px solid var(--border); border-radius: var(--border-radius-md) var(--border-radius-md) 0 0; text-decoration: none; border-bottom: none; transition: background .1s; }
+.tepic-header:hover { background: #E9EEF4; }
+.tepic-key { font-size: 10px; font-family: "Courier New", monospace; color: var(--text-3); }
+.tepic-sep { font-size: 11px; color: var(--text-4); }
+.tepic-label { font-size: 12px; font-weight: 600; color: var(--text-2); flex: 1; }
+.tepic-arrow { font-size: 11px; color: var(--text-4); opacity: 0; transition: opacity .1s; }
+.tepic-header:hover .tepic-arrow { opacity: 1; }
+.tepic-header:hover .tepic-label { color: var(--zarco-dark); }
+.trows-under-epic { border-radius: 0 0 var(--border-radius-md) var(--border-radius-md); }
+.ai-badge { font-size: 9px; font-weight: 700; letter-spacing: .04em; background: #EEEDFE; color: #534AB7; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
+.ttitle { font-size: 13px; color: var(--text); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 /* ── FOOTER ── */
 footer { text-align: center; padding: 28px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-3); }
@@ -162,12 +175,7 @@ footer { text-align: center; padding: 28px 24px; border-top: 1px solid var(--bor
 <!-- HEADER -->
 <header>
   <a class="logo" href="#">
-    <div class="logo-mark">
-      <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
-        <path d="M4 5.5h14L7 11.5l11 5.5H4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="18" cy="5.5" r="1.8" fill="rgba(255,255,255,.7)"/>
-      </svg>
-    </div>
+    <div class="logo-mark" style="background:none;padding:0;overflow:hidden"><img src="data:image/png;base64,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" alt="Zarco" style="width:34px;height:34px;display:block;border-radius:8px"></div>
     <span class="logo-name">Zarco<span class="logo-beta">BETA</span></span>
   </a>
   <div class="hdr-right">
@@ -191,7 +199,7 @@ footer { text-align: center; padding: 28px 24px; border-top: 1px solid var(--bor
     </span>
     <span class="pill">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--zarco-dark)" stroke-width="2.2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-      5 equipas · 19 tarefas no sprint
+      4 equipas · 17 tarefas no sprint
     </span>
   </div>
 </div>
@@ -229,188 +237,281 @@ footer { text-align: center; padding: 28px 24px; border-top: 1px solid var(--bor
       </div>
     </div>
 
-    <!-- FINANCE -->
     <div class="tsec">
       <div class="thead">
         <div class="tdot" style="background:#185FA5"></div>
         <span class="tname">Finance</span>
-        <span class="town">Joana Palma</span>
         <span class="tcount">6 tarefas</span>
       </div>
-      <div class="trows">
-        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-106">
+      <div class="tepic-group">
+        <a class="tepic-header" href="https://zarcoai.atlassian.net/browse/OPM-20" target="_blank" rel="noopener">
+          <span class="tepic-key">OPM-20</span>
+          <span class="tepic-sep">·</span>
+          <span class="tepic-label">Portal de Merchants</span>
+          <span class="tepic-arrow">↗</span>
+        </a>
+        <div class="trows trows-under-epic">
+        <a class="trow trow-accent" style="--tc:#185FA5" href="https://zarcoai.atlassian.net/browse/OPM-106" target="_blank" rel="noopener">
           <span class="tkey">OPM-106</span>
           <span class="ttitle">Envio de Convites</span>
+          
           <span class="spill p-prog">Em progresso</span>
-          <span class="tdue tdue-u">⚑ 29 Jun</span>
+          <span class="tdue due-u">⚑ 29 Jun</span>
           <span class="tass">Joana Palma</span>
         </a>
-        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-66">
+        </div>
+      </div>
+      <div class="tepic-group">
+        <a class="tepic-header" href="https://zarcoai.atlassian.net/browse/OPM-13" target="_blank" rel="noopener">
+          <span class="tepic-key">OPM-13</span>
+          <span class="tepic-sep">·</span>
+          <span class="tepic-label">Cobranças</span>
+          <span class="tepic-arrow">↗</span>
+        </a>
+        <div class="trows trows-under-epic">
+        <a class="trow trow-accent" style="--tc:#185FA5" href="https://zarcoai.atlassian.net/browse/OPM-66" target="_blank" rel="noopener">
           <span class="tkey">OPM-66</span>
           <span class="ttitle">Reporting de Cobranças</span>
+          
           <span class="spill p-prog">Em progresso</span>
-          <span class="tdue tdue-n">—</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">Vasco Tamen</span>
         </a>
-        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-225">
+        <a class="trow trow-accent" style="--tc:#185FA5" href="https://zarcoai.atlassian.net/browse/OPM-225" target="_blank" rel="noopener">
           <span class="tkey">OPM-225</span>
           <span class="ttitle">Melhoria de sistema automático</span>
+          
           <span class="spill p-prog">Em progresso</span>
-          <span class="tdue tdue-n">—</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">Vasco Tamen</span>
         </a>
-        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-101">
+        <a class="trow trow-accent" style="--tc:#185FA5" href="https://zarcoai.atlassian.net/browse/OPM-101" target="_blank" rel="noopener">
           <span class="tkey">OPM-101</span>
           <span class="ttitle">Resposta a Cobranças Automática</span>
+          <span class="ai-badge">AI</span>
           <span class="spill p-todo">A fazer</span>
-          <span class="tdue tdue-n">—</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">Vasco Tamen</span>
         </a>
-        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-67">
+        <a class="trow trow-accent" style="--tc:#185FA5" href="https://zarcoai.atlassian.net/browse/OPM-67" target="_blank" rel="noopener">
           <span class="tkey">OPM-67</span>
           <span class="ttitle">Regularização do Envio de Notas de Cobrança</span>
+          
           <span class="spill p-todo">A fazer</span>
-          <span class="tdue tdue-n">—</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">Vasco Tamen</span>
         </a>
-        <a class="trow trow-accent" style="--tc:#185FA5" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-62">
+        </div>
+      </div>
+      <div class="tepic-group">
+        <a class="tepic-header" href="https://zarcoai.atlassian.net/browse/OPM-12" target="_blank" rel="noopener">
+          <span class="tepic-key">OPM-12</span>
+          <span class="tepic-sep">·</span>
+          <span class="tepic-label">Faturação</span>
+          <span class="tepic-arrow">↗</span>
+        </a>
+        <div class="trows trows-under-epic">
+        <a class="trow trow-accent" style="--tc:#185FA5" href="https://zarcoai.atlassian.net/browse/OPM-62" target="_blank" rel="noopener">
           <span class="tkey">OPM-62</span>
           <span class="ttitle">Mapeamento de IDs Fatura Históricos</span>
+          
           <span class="spill p-over">Atrasado</span>
-          <span class="tdue tdue-u">12 Jun</span>
+          <span class="tdue due-u">12 Jun</span>
           <span class="tass">Joana Palma</span>
         </a>
+        </div>
       </div>
     </div>
 
-    <!-- CAMPAIGNS -->
     <div class="tsec">
       <div class="thead">
         <div class="tdot" style="background:#3B6D11"></div>
         <span class="tname">Campaigns</span>
-        <span class="town">Inês Ferreira</span>
         <span class="tcount">3 tarefas</span>
       </div>
-      <div class="trows">
-        <a class="trow trow-accent" style="--tc:#3B6D11" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-35">
+      <div class="tepic-group">
+        <a class="tepic-header" href="https://zarcoai.atlassian.net/browse/OPM-7" target="_blank" rel="noopener">
+          <span class="tepic-key">OPM-7</span>
+          <span class="tepic-sep">·</span>
+          <span class="tepic-label">Lançamento de Campanhas</span>
+          <span class="tepic-arrow">↗</span>
+        </a>
+        <div class="trows trows-under-epic">
+        <a class="trow trow-accent" style="--tc:#3B6D11" href="https://zarcoai.atlassian.net/browse/OPM-35" target="_blank" rel="noopener">
           <span class="tkey">OPM-35</span>
           <span class="ttitle">Automatização dos Textos de Campanhas</span>
+          
           <span class="spill p-prog">Em progresso</span>
-          <span class="tdue tdue-n">—</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">Inês Ferreira</span>
         </a>
-        <a class="trow trow-accent" style="--tc:#3B6D11" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-217">
+        </div>
+      </div>
+      <div class="tepic-group">
+        <a class="tepic-header" href="https://zarcoai.atlassian.net/browse/OPM-20" target="_blank" rel="noopener">
+          <span class="tepic-key">OPM-20</span>
+          <span class="tepic-sep">·</span>
+          <span class="tepic-label">Portal de Merchants</span>
+          <span class="tepic-arrow">↗</span>
+        </a>
+        <div class="trows trows-under-epic">
+        <a class="trow trow-accent" style="--tc:#3B6D11" href="https://zarcoai.atlassian.net/browse/OPM-217" target="_blank" rel="noopener">
           <span class="tkey">OPM-217</span>
           <span class="ttitle">Textos Automáticos na criação de campanhas</span>
+          
           <span class="spill p-prog">Em progresso</span>
-          <span class="tdue tdue-n">—</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">Duarte Ramires</span>
         </a>
-        <a class="trow trow-accent" style="--tc:#3B6D11" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-117">
+        <a class="trow trow-accent" style="--tc:#3B6D11" href="https://zarcoai.atlassian.net/browse/OPM-117" target="_blank" rel="noopener">
           <span class="tkey">OPM-117</span>
           <span class="ttitle">Geração de Mocks Campanhas</span>
+          
           <span class="spill p-todo">A fazer</span>
-          <span class="tdue tdue-n">—</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">Dinis Rodrigues</span>
         </a>
+        </div>
       </div>
     </div>
 
-    <!-- AI AGENTS -->
-    <div class="tsec">
-      <div class="thead">
-        <div class="tdot" style="background:#534AB7"></div>
-        <span class="tname">AI Agents</span>
-        <span class="town">António Monteiro</span>
-        <span class="tcount">3 tarefas</span>
-      </div>
-      <div class="trows">
-        <a class="trow trow-accent" style="--tc:#534AB7" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-99">
-          <span class="tkey">OPM-99</span>
-          <span class="ttitle">Resposta Automática a Reclamações</span>
-          <span class="spill p-prog">Em progresso</span>
-          <span class="tdue tdue-n">—</span>
-          <span class="tass">António Monteiro</span>
-        </a>
-        <a class="trow trow-accent" style="--tc:#534AB7" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-229">
-          <span class="tkey">OPM-229</span>
-          <span class="ttitle">Assistente de Account</span>
-          <span class="spill p-prog">Em progresso</span>
-          <span class="tdue tdue-n">—</span>
-          <span class="tass">Vasco Tamen</span>
-        </a>
-        <a class="trow trow-accent" style="--tc:#534AB7" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-100">
-          <span class="tkey">OPM-100</span>
-          <span class="ttitle">Automação de Report: Not Invoice &amp; Cancelled</span>
-          <span class="spill p-todo">A fazer</span>
-          <span class="tdue tdue-n">—</span>
-          <span class="tass">António Monteiro</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- CONTROL PROCESSES -->
     <div class="tsec">
       <div class="thead">
         <div class="tdot" style="background:#993C1D"></div>
         <span class="tname">Control Processes</span>
-        <span class="town">Vasco Tamen</span>
-        <span class="tcount">2 tarefas</span>
+        <span class="tcount">4 tarefas</span>
       </div>
-      <div class="trows">
-        <a class="trow trow-accent" style="--tc:#993C1D" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-82">
+      <div class="tepic-group">
+        <a class="tepic-header" href="https://zarcoai.atlassian.net/browse/OPM-17" target="_blank" rel="noopener">
+          <span class="tepic-key">OPM-17</span>
+          <span class="tepic-sep">·</span>
+          <span class="tepic-label">Complains Analysis</span>
+          <span class="tepic-arrow">↗</span>
+        </a>
+        <div class="trows trows-under-epic">
+        <a class="trow trow-accent" style="--tc:#993C1D" href="https://zarcoai.atlassian.net/browse/OPM-82" target="_blank" rel="noopener">
           <span class="tkey">OPM-82</span>
           <span class="ttitle">Unificação dos Emails de Reclamações em JIRA</span>
+          
           <span class="spill p-prog">Em progresso</span>
-          <span class="tdue tdue-n">—</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">António Monteiro</span>
         </a>
-        <a class="trow trow-accent" style="--tc:#993C1D" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-254">
+        <a class="trow trow-accent" style="--tc:#993C1D" href="https://zarcoai.atlassian.net/browse/OPM-99" target="_blank" rel="noopener">
+          <span class="tkey">OPM-99</span>
+          <span class="ttitle">Resposta Automática a Reclamações</span>
+          <span class="ai-badge">AI</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue due-n">—</span>
+          <span class="tass">António Monteiro</span>
+        </a>
+        </div>
+      </div>
+      <div class="tepic-group">
+        <a class="tepic-header" href="https://zarcoai.atlassian.net/browse/OPM-251" target="_blank" rel="noopener">
+          <span class="tepic-key">OPM-251</span>
+          <span class="tepic-sep">·</span>
+          <span class="tepic-label">Sistema de Atribuição</span>
+          <span class="tepic-arrow">↗</span>
+        </a>
+        <div class="trows trows-under-epic">
+        <a class="trow trow-accent" style="--tc:#993C1D" href="https://zarcoai.atlassian.net/browse/OPM-254" target="_blank" rel="noopener">
           <span class="tkey">OPM-254</span>
           <span class="ttitle">Sugestão de valores — Sistema de Atribuição</span>
+          
           <span class="spill p-prog">Em progresso</span>
-          <span class="tdue tdue-n">—</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">Vasco Tamen</span>
         </a>
+        </div>
+      </div>
+      <div class="tepic-group">
+        <a class="tepic-header" href="https://zarcoai.atlassian.net/browse/OPM-18" target="_blank" rel="noopener">
+          <span class="tepic-key">OPM-18</span>
+          <span class="tepic-sep">·</span>
+          <span class="tepic-label">Ferramentas de Operações</span>
+          <span class="tepic-arrow">↗</span>
+        </a>
+        <div class="trows trows-under-epic">
+        <a class="trow trow-accent" style="--tc:#993C1D" href="https://zarcoai.atlassian.net/browse/OPM-100" target="_blank" rel="noopener">
+          <span class="tkey">OPM-100</span>
+          <span class="ttitle">Automação de Report: Not Invoice &amp; Cancelled</span>
+          <span class="ai-badge">AI</span>
+          <span class="spill p-todo">A fazer</span>
+          <span class="tdue due-n">—</span>
+          <span class="tass">António Monteiro</span>
+        </a>
+        </div>
       </div>
     </div>
 
-    <!-- ACCOUNT COMERCIAL -->
     <div class="tsec">
       <div class="thead">
         <div class="tdot" style="background:#BA7517"></div>
         <span class="tname">Account Comercial</span>
-        <span class="town">Sofia Cabanas</span>
-        <span class="tcount">3 tarefas</span>
+        <span class="tcount">4 tarefas</span>
       </div>
-      <div class="trows">
-        <a class="trow trow-accent" style="--tc:#BA7517" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-250">
+      <div class="tepic-group">
+        <a class="tepic-header" href="https://zarcoai.atlassian.net/browse/OPM-235" target="_blank" rel="noopener">
+          <span class="tepic-key">OPM-235</span>
+          <span class="tepic-sep">·</span>
+          <span class="tepic-label">Revamp Pipedrive</span>
+          <span class="tepic-arrow">↗</span>
+        </a>
+        <div class="trows trows-under-epic">
+        <a class="trow trow-accent" style="--tc:#BA7517" href="https://zarcoai.atlassian.net/browse/OPM-250" target="_blank" rel="noopener">
           <span class="tkey">OPM-250</span>
-          <span class="ttitle">Avaliação da melhor ferramenta (Revamp Pipedrive)</span>
+          <span class="ttitle">Avaliação da melhor ferramenta</span>
+          
           <span class="spill p-prog">Em progresso</span>
-          <span class="tdue tdue-n">—</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">Sofia Cabanas</span>
         </a>
-        <a class="trow trow-accent" style="--tc:#BA7517" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-24">
-          <span class="tkey">OPM-24</span>
-          <span class="ttitle">Construção de Reports em Excel Automáticos</span>
-          <span class="spill p-hold">On hold</span>
-          <span class="tdue tdue-n">—</span>
-          <span class="tass">Vasco Correia</span>
-        </a>
-        <a class="trow trow-accent" style="--tc:#BA7517" target="_blank" rel="noopener" href="https://zarcoai.atlassian.net/browse/OPM-134">
-          <span class="tkey">OPM-134</span>
-          <span class="ttitle">Mock Push Notifications</span>
-          <span class="spill p-hold">On hold</span>
-          <span class="tdue tdue-n">—</span>
+        <a class="trow trow-accent" style="--tc:#BA7517" href="https://zarcoai.atlassian.net/browse/OPM-229" target="_blank" rel="noopener">
+          <span class="tkey">OPM-229</span>
+          <span class="ttitle">Assistente de Account</span>
+          <span class="ai-badge">AI</span>
+          <span class="spill p-prog">Em progresso</span>
+          <span class="tdue due-n">—</span>
           <span class="tass">Vasco Tamen</span>
         </a>
+        </div>
+      </div>
+      <div class="tepic-group">
+        <a class="tepic-header" href="https://zarcoai.atlassian.net/browse/OPM-5" target="_blank" rel="noopener">
+          <span class="tepic-key">OPM-5</span>
+          <span class="tepic-sep">·</span>
+          <span class="tepic-label">Análises Automatizadas</span>
+          <span class="tepic-arrow">↗</span>
+        </a>
+        <div class="trows trows-under-epic">
+        <a class="trow trow-accent" style="--tc:#BA7517" href="https://zarcoai.atlassian.net/browse/OPM-24" target="_blank" rel="noopener">
+          <span class="tkey">OPM-24</span>
+          <span class="ttitle">Construção de Reports em Excel Automáticos</span>
+          
+          <span class="spill p-hold">On hold</span>
+          <span class="tdue due-n">—</span>
+          <span class="tass">Vasco Correia</span>
+        </a>
+        </div>
+      </div>
+      <div class="tepic-group">
+        <div class="trows">
+        <a class="trow trow-accent" style="--tc:#BA7517" href="https://zarcoai.atlassian.net/browse/OPM-134" target="_blank" rel="noopener">
+          <span class="tkey">OPM-134</span>
+          <span class="ttitle">Mock Push Notifications</span>
+          
+          <span class="spill p-hold">On hold</span>
+          <span class="tdue due-n">—</span>
+          <span class="tass">Vasco Tamen</span>
+        </a>
+        </div>
       </div>
     </div>
 
   </div><!-- /view-prio -->
 
-  <!-- ═══ VIEW: CALENDAR ═══ -->
+    <!-- ═══ VIEW: CALENDAR ═══ -->
   <div id="view-cal" style="display:none">
 
     <div class="month-nav">
@@ -444,11 +545,7 @@ footer { text-align: center; padding: 28px 24px; border-top: 1px solid var(--bor
 <!-- FOOTER -->
 <footer>
   <div class="foot-logo">
-    <div class="foot-z">
-      <svg width="12" height="12" viewBox="0 0 22 22" fill="none">
-        <path d="M4 5.5h14L7 11.5l11 5.5H4" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
+    <div class="foot-z" style="background:none;padding:0;overflow:hidden"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEMAAAA4CAYAAACmL0VxAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAqySURBVGhD7VprbBzVFf7OnfX6Ha8dr11jO94kTgpN0tjkAW1QvE6lJmpVYaNKBCiKE6lqRYsgkaqiqsVO4QdVShNEeUiUJqEqv1IMSlOpFca7Takogca0KRADztqYhJKH1yE2sdd7T3+ce2fXKyh+zIa4zSfZOzszO7P3m3O+8517l5gZVyBQmTv+n3GFjDRcISMNV8hIw5TJiI2cC70Wf68hc///Emiq1WT70c7de45H7y7158WbK5d2rw8ujoYr6qMrA9U9mefOVUyZjA1dD3d3n34nbN8rJtbEVOYvGGqqWBRdH1wSDVfWRxrmMDlTJqO56+Hu6Jm+MDODzD77SUrbLvXnxcMV9ZG5SM6UybjpL7/u7Bz8RwuZoTMAAoHB7ivSiBHCCAF/frwpuCjSNL8+2lxZH1k5v+ayJWfKZGz729N79584sgXM0ARSTMzENkjAJnXsPgIxg4mYmLUmTmjQuEa5v3Doa43LX7uhoj5ybXFt9Nqi2sikG32GmDIZe45H795xtHM32QETAcwAEZgZiknyhwGXECbWYKKEBic0kNBAgpGnHF62qoZychw4injVvAXRxqLaaGNRbWRlYc1nRs6UyYiNnAstOnjfCUkLAQNQIGbJGIieTE4ZJFlIGNfgBEONa+YJpkBpPpY2VsMhgqOIHUVwlMLn/CX9jUU1kS/PW/zcl4oWPZv+HbKNKZMBAM3dj3RH/v1WGBmi+UmCSppBE2CdSBISDDXOrCeShHENmmBcvaYGgWAhHKVgyVBEcBwFBaDYlxdfN2/xs5vL1uys8BXHzOWzhimbLgBoX7ZxJ9LEUYFYtuTVwgooa5bISAKU1GCtSU2ASQOUZI6fvMAMiSjNALNmBoO1ZhAwoscCXeffbPtu/2/6Hjndvff0xIeh9Pt4jWmREa6oj4SDiyMw9YTBRAA0mAjECiIWBAI0gzSgtSbSGqwBaACWIA1cvDBOYEseM7PIEENyT/4YGqAXLrzZ9v3B3/YdGH61PfN7eYVpkQEAe6+/bWvAXxAn0OSIYCGFARCDoQE2USGRwaAJZtaaSNtQAJiZicGaQWyDjuEmL5v3EC7pwPAr7c98+PesEDJtMkKFZbFfNLZsl1qSighbQRQTa2aiJFhSRJtUYWitiZOATjLxhKZAVRFgIgtIjwQWLZN/YKRUmUF0IP5qxxtjp1w37BWmTQYAtC1cu+8nyzf+FCBTSuWJWouuNLPWmqABlYREgUkPpZmVBufm5XBReT5rEXF32MzMJmIgx+SeWvRYHgEzR0ff2pLxtWaNGZEBAB3LN3U8c8O21gXFZf02qJlA0AydZDIiCa012cggcwxJRsXV8ymnIMdqA4napkOCgWXwVkjsWXQmed5zMZ0xGQDQUrPi2e7m7zXfu3zTzlBBaYyYGUmGSjJDqgesdrBmsCGkLBSg0gUlIhiWSABai1hoQ4BwYEiBOF+AWQMod4o8L7XT8hmfhn19L7dFTvaGo4O9TQNDZ+sgzpPEeRr3mZ+Duuur2Z/nI0XiLRxFUIrgI2KlFClFk3yHT9n9gEMKjqPwg+BXW1fnhzw1ZZ6SkY6eM+829Hww2PBc79EbewYHGvrPng7l5ubwgrVV8PkdcpSCQ2CllGzbwSuCIqSMGBE7jiKHiJWQRpX+ktij1bcuzLznbJE1MjLxh3ePtdx5/EBnjt8xUZBGBIGV45BLjiFAIofYUUQqLUoeX/CtRcEsONJZacZU8btTPVt+1Hdwr/JJUydGi0w5ZdYgAmv7WFhaXqsUYmbsQ2srW7cjG0TgUpDx5MBLd+041rl3ODFWIkXT6qYtp64oEjOImUmsecp3WJW9uXT1zm8Evrgn8x5eIatk/PztF9rvfePQHgYTg81gTZUESBurKaVVKgqbMDC8AVJp6JaytTtvnb+2Y9INPEbWyNjV29W+662uDhPq5i/1lOWR24FL22JySE5wowj4TsX67beVZ5cIZEtAf9b7fPuu3q4OWx0cSomgo4iVInJMqz6pohCQfk51bknsvtCNrfV5wUsyVeh5ZDzW9+JdD7z5fHtaJLgiaB60nf5IE1MbIe4hNBbURp5YcnvjpSICXkdG/+hQaMUfH+hTiuA4ZEujRIdScMiYK0VMikgMFMEhiSCfIigiLC2s6HnqmrbGzOtnG55GxqboY93Sxtuu03Qt2nXUqQoih42Aig838sGbK9dkrWL8N3hGxlOxI22x0XMhNqN0RZPtVBiTBiR5jITKfwaDxEsApJnpV++92HF4+O2WC8mxwKSbZBmepcmqPz149PXzp1YqpaAUyKcUSMQTPqVYKZCjFCsiEust/YZruVPpJNZbLDiKc/LiJb68+FW5gViVf16sPj/42oqCmsii3HLPtcQTMuKJjwLBzh+fkwETHFKc0gxroxUrs89HipUD028IIabqGPutSE0my1YZt4ep9BfHVhbURDYUX71/Wd5VniwveEJGbORcqP7Q/SfSBVMGbKLACOSkQTtmJjytYfM5KtWkSWNGk8rzx/QrDhFWFFRH7pgf3jpbm+6JZgT8+XHrGE2ZBINFJK1QZpRSERVTeokIYGg7v2O9ur2S+azRV+NYzYQHgH9dPBm+5/0DR/sTZ2f1kwlvyMjJj9cVlMVS5YIYINZWTN0xWNVM11GZ1bFjZ+16VGiATOsiU+6uFzFTgi5vjBGdCNx/5tALo3p8xqLrCRkAcNfS9Q/ZQWswadYkFVZGZnoTQ44bObJNJF2qMWjaLK0wMzSLQ5cXgLVmt5FzI0Y2RiYuBv482tuW+d2mCg/JaNqzvmJxxDRl5slLiMiAbAYxGCRTeyZSWDNMR++mkEuiLb0snW3aie6EKEwUMUAjeubl2DMyAOCZddtab69bsw9mDUU0QUiw0/+pZQCAmU3oi15oaeHt5WSwKf0wWWQdnKSJjSAYIguUP24vMF14SkYgJz/+5Npbtj6xevPWuvyymKwTpdyovJHUcaPCtPUSD2afrC6Q2WnXpEzjYpYnzOQHA2Cz6A0GvuCfeZn1pLR+Eg6feSf89MArbX8dOtH03sXhkO1N0heYjbdImbC0kuoQWEqr8SIEOI7j+hE5L+VBFuaW9+yq+uaMe5qskpGOgdGh0LHzpxpeGoo1vX7h/YY3PjzVMMqJEmnn3dZ90kSwDF7BmDDjPYwRU8aTCKGslKIfVm5qXVsw8xnzS0bGx2HwYjw0+FE89PJwLHxkeKCpd/SDlaN6rFSWBgiKiAwZqXkP17orKEXkM6bsK/Ou2XdnsHlr5j2mg8+UjI/DkeH+8MHTx7b8/uw/26yjlRRJpZJdR7ERUuWfd+L+6pYNs/0Nx2VHhsXJseHQg/1duw+ff7vF6ohZZIJSEjE+ApNS9Mu6zY0LPWjcPK0mXuKq3JLYg0tvat1cuXqPnR2TimJKiVmY/nbwhu1eEIHLmQyLHbUbtjcW1kakdBrPQUTMwG3l13W0lDZ4NhF02ZMBAF8vX7ZfHK1MAmmtubWs4aHby6/bmXnubDAnyFhVvCAivwER57mxdNn+O6qa7s48b7aYE2RU5ZbE5JdPjMW5wZ57ajfOqoR+EuYEGafGhkNgoD4/2PPwkpubM497hTlBxsmx4VB9frDn0aWbm4uc3Bk3Yp+Gy9ZnpOPV8wPhzxdW9BQ5eVkjAnOFjEuF/wDtnEYwhE0YQQAAAABJRU5ErkJggg==" alt="Zarco" style="width:20px;height:20px;display:block;border-radius:5px"></div>
     <strong style="color:var(--zarco-dark)">Zarco</strong>
   </div>
   Data4Deals &middot; OPS Team &middot; Sprint &amp; Calendário de Apresentações 2026
